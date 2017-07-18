@@ -1,0 +1,13 @@
+{
+    "name": "PI Cycle Time Chart",
+    "className": "PICycleTimeChartApp",
+    "server": "https://rally1.rallydev.com",
+    "sdk": "2.1",
+    "javascript": [
+        "CycleTimeCalculator.js",
+        "PICycleTimeChartApp.js"
+    ],
+    "css": [
+        "app.css"
+    ]
+}
