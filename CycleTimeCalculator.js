@@ -11,31 +11,72 @@ Ext.define('CycleTimeCalculator', {
     prepareChartData: function (store) {
         var groupedData = this._groupData(store.getRange(), 'ActualEndDate'),
             categories = _.keys(groupedData),
-            data = _.map(groupedData, function (pis, key) {
-                var cycleTimes = _.sortBy(_.map(pis, function(pi) {
-                    var startDate = pi.get('ActualStartDate'),
-                        endDate = pi.get('ActualEndDate');
-                        return moment(endDate).diff(moment(startDate), 'days');
-                }));
-
-                var middle = Math.floor(cycleTimes.length / 2);
-                var median = cycleTimes[middle];
-                if (cycleTimes.length % 2 === 0) {
-                    median = (cycleTimes[middle - 1] + cycleTimes[middle]) / 2;
-                }
-
-                return [key, median];
-            });
+            groupedCycleTimes = _.transform(groupedData, function (result, pis, group) {
+                result[group] = this._computeCycleTimes(pis);
+            }, {}, this),
+            cycleTimeData = _.map(groupedCycleTimes, function (cycleTimes, key) {
+                return [key, this._computeMedian(cycleTimes)];
+            }, this),
+            percentileData = _.map(groupedCycleTimes, function(cycleTimes) {
+                return this._computePercentiles(cycleTimes);
+            }, this);
 
         return {
             categories: categories,
             series: [
                 {
                     name: 'Cycle Time',
-                    data: data
+                    type: 'column',
+                    data: cycleTimeData
+                },
+                {
+                    name: 'Cycle Time P25 - P75',
+                    type: 'errorbar',
+                    data: percentileData
                 }
             ]
         };
+    },
+
+    _computeCycleTimes: function (pis) {
+        return _.sortBy(_.map(pis, function (pi) {
+            var startDate = pi.get('ActualStartDate'),
+                endDate = pi.get('ActualEndDate');
+            return moment(endDate).diff(moment(startDate), 'days');
+        }));
+    },
+
+    _computeMedian: function (cycleTimes) {
+        var middle = Math.floor(cycleTimes.length / 2);
+        var median = cycleTimes[middle];
+        if (cycleTimes.length % 2 === 0) {
+            median = (cycleTimes[middle - 1] + cycleTimes[middle]) / 2;
+        }
+        return median;
+    },
+
+    _computePercentiles: function(cycleTimes) {
+        var p25 = this._computePercentile(0.25, cycleTimes), 
+            p75 = this._computePercentile(0.75, cycleTimes);
+
+        if (p25 === p75) {
+            return [];
+        } else {
+            return [p25, p75];
+        }
+    },
+
+    _computePercentile: function (p, cycleTimes) {
+        var index = p * cycleTimes.length,
+            floorIndex = Math.floor(index);
+
+        if (cycleTimes.length === 1) {
+            return cycleTimes[0];
+        } else if(floorIndex === index) {
+            return (cycleTimes[floorIndex] + cycleTimes[floorIndex - 1]) / 2;
+        } else {
+            return cycleTimes[floorIndex];
+        }
     },
 
     _groupData: function (records, field) {
