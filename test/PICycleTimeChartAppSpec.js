@@ -1,7 +1,7 @@
-describe('CustomApp', function() {
+describe('PICycleTimeChartApp', function() {
 
     it('should render the app', function() {
-        var app = Rally.test.Harness.launchApp('CustomApp');
+        var app = Rally.test.Harness.launchApp('PICycleTimeChartApp');
         expect(app.getEl()).toBeDefined();
     });
     
