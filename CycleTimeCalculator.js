@@ -15,7 +15,7 @@ Ext.define('CycleTimeCalculator', {
                 result[group] = this._computeCycleTimes(pis);
             }, {}, this),
             cycleTimeData = _.map(groupedCycleTimes, function (cycleTimes, key) {
-                return [key, this._computeMedian(cycleTimes)];
+                return [key, this._computePercentile(0.5, cycleTimes)];
             }, this),
             percentileData = _.map(groupedCycleTimes, function(cycleTimes) {
                 return this._computePercentiles(cycleTimes);
@@ -30,7 +30,7 @@ Ext.define('CycleTimeCalculator', {
                     data: cycleTimeData
                 },
                 {
-                    name: 'Cycle Time P25 - P75',
+                    name: 'p25 - p75',
                     type: 'errorbar',
                     data: percentileData
                 }
@@ -44,15 +44,6 @@ Ext.define('CycleTimeCalculator', {
                 endDate = pi.get('ActualEndDate');
             return moment(endDate).diff(moment(startDate), 'days');
         }));
-    },
-
-    _computeMedian: function (cycleTimes) {
-        var middle = Math.floor(cycleTimes.length / 2);
-        var median = cycleTimes[middle];
-        if (cycleTimes.length % 2 === 0) {
-            median = (cycleTimes[middle - 1] + cycleTimes[middle]) / 2;
-        }
-        return median;
     },
 
     _computePercentiles: function(cycleTimes) {

@@ -2,12 +2,17 @@ describe('CycleTimeCalculator', function () {
 
     var data, store;
 
-    function expectChartDataToBe(chartData, categories, cycleTimeSeriesData) {
+    function expectChartDataToBe(chartData, categories, cycleTimeSeriesData, percentileSeriesData) {
         expect(chartData.categories).toEqual(categories); 
         expect(chartData.series.length).toBe(2);
-        var cylceTimeSeries = chartData.series[0];
-        expect(cylceTimeSeries.name).toBe('Cycle Time');
-        expect(cylceTimeSeries.data).toEqual(cycleTimeSeriesData);
+        var cycleTimeSeries = chartData.series[0];
+        expect(cycleTimeSeries.name).toBe('Cycle Time');
+        expect(cycleTimeSeries.type).toBe('column');
+        expect(cycleTimeSeries.data).toEqual(cycleTimeSeriesData);
+        var percentileSeries = chartData.series[1];
+        expect(percentileSeries.name).toBe('p25 - p75');
+        expect(percentileSeries.type).toBe('errorbar');
+        expect(percentileSeries.data).toEqual(percentileSeriesData)
     }
 
     beforeEach(function () {
@@ -33,7 +38,7 @@ describe('CycleTimeCalculator', function () {
             bucketBy: 'quarter'
         });
         var chartData = calculator.prepareChartData(store);
-        expectChartDataToBe(chartData, ['2017 Q1', '2017 Q2'], [['2017 Q1', 2.5], ['2017 Q2', 6]]);
+        expectChartDataToBe(chartData, ['2017 Q1', '2017 Q2'], [['2017 Q1', 2.5], ['2017 Q2', 6]], [[1, 4], [3, 7]]);
     });
 
     it('should bucket by month', function () {
@@ -41,7 +46,7 @@ describe('CycleTimeCalculator', function () {
             bucketBy: 'month'
         });
         var chartData = calculator.prepareChartData(store);
-        expectChartDataToBe(chartData, ['Mar \'17', 'Jun \'17'], [['Mar \'17', 2.5], ['Jun \'17', 6]]);
+        expectChartDataToBe(chartData, ['Mar \'17', 'Jun \'17'], [['Mar \'17', 2.5], ['Jun \'17', 6]], [[1, 4], [3, 7]]);
     });
 
     it('should bucket by release', function () {
@@ -49,6 +54,6 @@ describe('CycleTimeCalculator', function () {
             bucketBy: 'release'
         });
         var chartData = calculator.prepareChartData(store);
-        expectChartDataToBe(chartData, ['Release 1', 'Release 2'], [['Release 1', 2.5], ['Release 2', 6]]);
+        expectChartDataToBe(chartData, ['Release 1', 'Release 2'], [['Release 1', 2.5], ['Release 2', 6]], [[1, 4], [3, 7]]);
     });
 });
