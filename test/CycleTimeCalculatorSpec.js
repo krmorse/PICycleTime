@@ -12,7 +12,7 @@ describe('CycleTimeCalculator', function () {
         var percentileSeries = chartData.series[1];
         expect(percentileSeries.name).toBe('p25 - p75');
         expect(percentileSeries.type).toBe('errorbar');
-        expect(percentileSeries.data).toEqual(percentileSeriesData)
+        expect(percentileSeries.data).toEqual(percentileSeriesData);
     }
 
     beforeEach(function () {
