@@ -12,13 +12,14 @@ Ext.define('PICycleTimeChartApp', {
     config: {
         defaultSettings: {
             bucketBy: 'quarter',
+            piType: 'portfolioitem/feature',
             query: ''
         }
     },
 
     launch: function() {
         Rally.data.wsapi.ModelFactory.getModel({
-            type: 'portfolioitem/feature' //TODO: make configurable/dynamic
+            type: this.getSetting('piType'),
         }).then({
             success: function(model) {
                 this.model = model;
@@ -30,6 +31,47 @@ Ext.define('PICycleTimeChartApp', {
 
     getSettingsFields: function() {
         return [
+            {
+                name: 'piType',
+                xtype: 'rallycombobox',
+                plugins: ['rallyfieldvalidationui'],
+                allowBlank: false,
+                editable: false,
+                autoSelect: false,
+                validateOnChange: false,
+                validateOnBlur: false,
+                fieldLabel: 'Type', 
+                shouldRespondToScopeChange: true,
+                storeConfig: {
+                    model: 'TypeDefinition',
+                    sorters: [{ property: 'Ordinal' }],
+                    fetch: ['DisplayName', 'TypePath'],
+                    filters: [
+                        { property: 'Parent.Name', value: 'Portfolio Item' },
+                        { property: 'Creatable', value: true }
+                    ],
+                    autoLoad: false,
+                    remoteFilter: true,
+                    remoteSort: true
+                },
+                displayField: 'DisplayName',
+                valueField: 'TypePath',
+                listeners: {
+                    change: function (combo) {
+                        combo.fireEvent('typeselected', combo.getValue(), combo.context);
+                    },
+                    ready: function (combo) {
+                      combo.fireEvent('typeselected', combo.getValue(), combo.context);
+                    }
+                },
+                bubbleEvents: ['typeselected'],
+                readyEvent: 'ready',
+                handlesEvents: {
+                    projectscopechanged: function (context) {
+                        this.refreshWithNewContext(context);
+                    }
+                }
+            },
             {
                 name: 'bucketBy',
                 xtype: 'rallycombobox',
@@ -47,7 +89,24 @@ Ext.define('PICycleTimeChartApp', {
                         { name: 'Release', value: 'release' }
                     ]
                 },
-                lastQuery: ''
+                lastQuery: '',
+                handlesEvents: {
+                    typeselected: function (type) {
+                         Rally.data.ModelFactory.getModel({
+                            type: type,
+                            success: function(model) {
+                                this.store.filterBy(function(record) {
+                                    return record.get('value') !== 'release' ||
+                                        model.typeDefinition.Ordinal === 0;
+                                });
+                                if (!this.store.findRecord('value', this.getValue())) {
+                                    this.setValue('month');
+                                }
+                            },
+                            scope: this
+                        });
+                    }
+                }
             },
             {
                 type: 'query'
@@ -132,7 +191,7 @@ Ext.define('PICycleTimeChartApp', {
                 plotOptions: {
                     column: {
                         dataLabels: {
-                            enabled: true
+                            enabled: false
                         }
                     }
                 }
