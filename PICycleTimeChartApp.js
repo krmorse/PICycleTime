@@ -214,7 +214,11 @@ Ext.define('PICycleTimeChartApp', {
     },
 
     _getChartSort: function() {
-        return [{ property: 'ActualEndDate', direction: 'ASC' }];
+        if (this.getSetting('bucketBy') === 'release') {
+            return [{ property: 'Release.ReleaseDate', direction: 'ASC' }];
+        } else {
+            return [{ property: 'ActualEndDate', direction: 'ASC' }];
+        }
     },
 
     _getFilters: function() {
