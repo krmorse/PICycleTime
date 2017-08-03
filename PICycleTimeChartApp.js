@@ -25,6 +25,10 @@ Ext.define('PICycleTimeChartApp', {
                 this.model = model;
                 this._addChart();
             },
+            failure: function() {
+                Rally.ui.notify.Notifier.showError({ message: 'Unable to load model type "' + 
+                    this.getSetting('piType') + '". Please verify the settings are configured correctly.' });
+            },
             scope: this
         });
     },
