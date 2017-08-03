@@ -86,7 +86,8 @@ Ext.define('PICycleTimeChartApp', {
                     data: [
                         { name: 'Month', value: 'month' },
                         { name: 'Quarter', value: 'quarter' },
-                        { name: 'Release', value: 'release' }
+                        { name: 'Release', value: 'release' },
+                        { name: 'Year', value: 'year' }
                     ]
                 },
                 lastQuery: '',
