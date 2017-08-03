@@ -165,9 +165,7 @@ Ext.define('PICycleTimeChartApp', {
     _getChartConfig: function() {
         return {
             xtype: 'rallychart',
-            chartColors: [
-                "#005EB8" // $blue
-            ],
+            chartColors: ['#937bb7'],
             storeType: 'Rally.data.wsapi.Store',
             storeConfig: {
                 context: this.getContext().getDataContext(),
