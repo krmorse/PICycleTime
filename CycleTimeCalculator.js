@@ -25,14 +25,15 @@ Ext.define('CycleTimeCalculator', {
             categories: categories,
             series: [
                 {
-                    name: 'Cycle Time',
+                    name: 'Cycle Time (Median)',
                     type: 'column',
                     data: cycleTimeData
                 },
                 {
-                    name: 'p25 - p75',
+                    name: 'P25 - P75',
                     type: 'errorbar',
-                    data: percentileData
+                    data: percentileData,
+                    showInLegend: true
                 }
             ]
         };

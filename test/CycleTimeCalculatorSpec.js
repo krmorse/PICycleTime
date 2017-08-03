@@ -6,11 +6,12 @@ describe('CycleTimeCalculator', function () {
         expect(chartData.categories).toEqual(categories); 
         expect(chartData.series.length).toBe(2);
         var cycleTimeSeries = chartData.series[0];
-        expect(cycleTimeSeries.name).toBe('Cycle Time');
+        expect(cycleTimeSeries.name).toBe('Cycle Time (Median)');
         expect(cycleTimeSeries.type).toBe('column');
         expect(cycleTimeSeries.data).toEqual(cycleTimeSeriesData);
         var percentileSeries = chartData.series[1];
-        expect(percentileSeries.name).toBe('p25 - p75');
+        expect(percentileSeries.name).toBe('P25 - P75');
+        expect(percentileSeries.showInLegend).toBe(true);
         expect(percentileSeries.type).toBe('errorbar');
         expect(percentileSeries.data).toEqual(percentileSeriesData);
     }

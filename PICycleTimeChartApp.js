@@ -181,7 +181,7 @@ Ext.define('PICycleTimeChartApp', {
             },
             chartConfig: {
                 chart: { type: 'column' },
-                legend: { enabled: false },
+                legend: { enabled: true },
                 title: {
                     text: ''
                 },
