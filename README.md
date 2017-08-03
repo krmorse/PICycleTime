@@ -18,7 +18,7 @@ Once the app is installed, use the gear menu on the app panel and select "Edit A
 Pick the Portfolio Item type you'd like to chart.  Defaults to the lowest level PI.
 
 #### Bucket By
-Pick the timeframe for which to generate values along the x-axis.  Available options include month, quarter.  Release is also available if the lowest level PI type is selected above.
+Pick the timeframe for which to generate values along the x-axis.  Available options include month, quarter and year.  Release is also available if the lowest level PI type is selected above.
 
 #### Query
 In addition to the advanced filtering component in the app, you can write your own complex filter queries. [Extensive documentation](https://help.rallydev.com/grid-queries?basehost=https://rally1.rallydev.com) is available. This might be useful if you want to always limit the chart to certain complex criteria.
