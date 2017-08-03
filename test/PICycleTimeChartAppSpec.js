@@ -32,6 +32,14 @@ describe('PICycleTimeChartApp', function() {
         });
     });
 
+    pit('should show an error flare if the type is not configured correctly', function() {
+        var notificationStub = Rally.test.Mock.stub(Rally.ui.notify.Notifier, 'showError');
+        app = Rally.test.Harness.launchApp('PICycleTimeChartApp', { settings: { piType: 'portfolioitem/foo'}});
+        return onceCalled(notificationStub).then(function() {
+            expect(notificationStub.firstCall.args[0].message).toContain('Unable to load model type "portfolioitem/foo".');
+        });
+    });
+
     pit('should only load finished pis', function() {
         return renderChart().then(function() {
             var filters = gridboard.storeConfig.filters;

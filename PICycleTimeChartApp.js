@@ -25,6 +25,10 @@ Ext.define('PICycleTimeChartApp', {
                 this.model = model;
                 this._addChart();
             },
+            failure: function() {
+                Rally.ui.notify.Notifier.showError({ message: 'Unable to load model type "' + 
+                    this.getSetting('piType') + '". Please verify the settings are configured correctly.' });
+            },
             scope: this
         });
     },
@@ -86,7 +90,8 @@ Ext.define('PICycleTimeChartApp', {
                     data: [
                         { name: 'Month', value: 'month' },
                         { name: 'Quarter', value: 'quarter' },
-                        { name: 'Release', value: 'release' }
+                        { name: 'Release', value: 'release' },
+                        { name: 'Year', value: 'year' }
                     ]
                 },
                 lastQuery: '',

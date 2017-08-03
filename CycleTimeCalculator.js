@@ -9,7 +9,7 @@ Ext.define('CycleTimeCalculator', {
     },
 
     prepareChartData: function (store) {
-        var groupedData = this._groupData(store.getRange(), 'ActualEndDate'),
+        var groupedData = this._groupData(store.getRange()),
             categories = _.keys(groupedData),
             groupedCycleTimes = _.transform(groupedData, function (result, pis, group) {
                 result[group] = this._computeCycleTimes(pis);
@@ -70,15 +70,18 @@ Ext.define('CycleTimeCalculator', {
         }
     },
 
-    _groupData: function (records, field) {
+    _groupData: function (records) {
         return _.groupBy(records, function (record) {
+            var endDate = record.get('ActualEndDate');
             if (this.bucketBy === 'month') {
-                return moment(record.get(field)).startOf('month').format('MMM \'YY');
+                return moment(endDate).startOf('month').format('MMM \'YY');
             } else if (this.bucketBy === 'quarter') {
-                return moment(record.get(field)).startOf('quarter').format('YYYY [Q]Q');
+                return moment(endDate).startOf('quarter').format('YYYY [Q]Q');
             } else if (this.bucketBy === 'release') {
                 return record.get('Release')._refObjectName;
+            } else if (this.bucketBy === 'year') {
+                return moment(endDate).startOf('year').format('YYYY');
             }
         }, this);
-    }
+    },
 });

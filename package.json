@@ -1,6 +1,6 @@
 {
   "name": "PICycleTimeChart",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "devDependencies": {
       "grunt": "1.0.1",

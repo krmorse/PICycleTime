@@ -49,6 +49,14 @@ describe('CycleTimeCalculator', function () {
         expectChartDataToBe(chartData, ['Mar \'17', 'Jun \'17'], [['Mar \'17', 2.5], ['Jun \'17', 6]], [[1, 4], [3, 7]]);
     });
 
+    it('should bucket by year', function () {
+        var calculator = Ext.create('CycleTimeCalculator', {
+            bucketBy: 'year'
+        });
+        var chartData = calculator.prepareChartData(store);
+        expectChartDataToBe(chartData, ['2017'], [['2017', 4]], [[3, 6]]);
+    });
+
     it('should bucket by release', function () {
         var calculator = Ext.create('CycleTimeCalculator', {
             bucketBy: 'release'
